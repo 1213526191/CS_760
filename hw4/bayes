@@ -1,0 +1,1 @@
+python fitBayesNet.py $1 $2 $3

@@ -1,0 +1,5 @@
+dataName=$1
+nFold=$2
+rate=$3 
+nEpoch=$4
+python neuralnet.py $dataName $nFold $rate $nEpoch

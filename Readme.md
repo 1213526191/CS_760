@@ -1,4 +1,4 @@
-Bodyfat Prediction
+CS 760
 ===========================
 
 |Author|李一凡|

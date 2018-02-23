@@ -23,6 +23,18 @@ def loadDataName():
 
 def loadData(data_):
     data, metadata = sparff.loadarff(data_)
+    # change data to UTF-8
+    col_name_t = [name for name in metadata.names()]
+    data_category_t = [metadata[name][1] for name in col_name_t]
+    str_index_t = [index for index, content in enumerate(metadata.types()) if content == 'nominal']
+    data_class = data_category_t[-1]
+    data_raw_t = data.tolist()
+    for i in range(len(data_raw_t)):
+        data_raw_t[i] = list(data_raw_t[i])
+        for j in str_index_t:
+            data_raw_t[i][j] = data_raw_t[i][j].decode()
+    data = np.array(data_raw_t, dtype = 'O')
+    
     feature_range = []
     for name in metadata.names():
         feature_range.append(metadata[name][1])
@@ -123,13 +135,13 @@ def printTree(node, depth = 0):
             equality = "="
             threshold = node.getThreshold()
         if node.isTerminalNode():
-            print depth * "|\t" + "%s %s %s [%d %d]: %s" \
+            print(depth * "|\t" + "%s %s %s [%d %d]: %s" \
                                   % (node.getFeatureName(), equality, threshold,
-                                     count1, count2, node.getClassification())
+                                     count1, count2, node.getClassification()))
         else:
-            print depth * "|\t" + "%s %s %s [%d %d]" \
+            print(depth * "|\t" + "%s %s %s [%d %d]" \
                                   % (node.getFeatureName(), equality, threshold,
-                                     count1, count2)
+                                     count1, count2))
         depth +=1
     for child in node.getChildren():
         printTree(child, depth)
@@ -256,7 +268,7 @@ def classify(instance, node):
 
 def printTestPerformance(data_test, decisionTree, printResults = False):
     if printResults:
-        print "<Predictions for the Test Set Instances>"
+        print("<Predictions for the Test Set Instances>")
     correctCount = 0
     numData = len(data_test)
     for i in range(numData):
@@ -266,10 +278,10 @@ def printTestPerformance(data_test, decisionTree, printResults = False):
         if y_pred == y_actual:
             correctCount +=1
         if printResults:
-            print "%d: Actual: %s Predicted: %s" % (i+1, y_actual, y_pred)
+            print("%d: Actual: %s Predicted: %s" % (i+1, y_actual, y_pred))
     if printResults:
-        print "Number of correctly classified: %d Total number of test instances: %d" \
-          % (correctCount, numData)
+        print("Number of correctly classified: %d Total number of test instances: %d" \
+          % (correctCount, numData))
     classification_accuracy = 1.0 * correctCount / numData
     return classification_accuracy
                     
